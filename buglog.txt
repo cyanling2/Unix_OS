@@ -1,0 +1,54 @@
+bug1: kernel throwing pagefault exception when testing sometimes
+
+solution: changed the position of send_eoi in paging
+
+bug 2: it keeps bootlooping after when init paging
+
+solution: we forget to mark the video memory as present
+
+bug 3: rtc test interrupt can not be displayed
+
+solution: there's some problem with our enable irq and we rewrite the whole function.
+
+bug4: when reading fram0.txt, it repeatedly read “/” and print to terminal.
+solution: The bug occured because we were repeatedly reading thebfirst byte in a datablock. we solved it by adding a computation of bytenumber.
+
+  
+bug5: scroll up fails f the terminal prints multiple lines at once
+solution: scroll up when putc prints '\n'
+
+bug6: backspace pagefaults when the current key input stretches to a new line. 
+Solution: forgot to set the cursor to a new position
+
+bug7: term read unable to fetch keyboard input
+solution: used a buffer to store the key input buffer before clearing it.
+
+bug8: halt raises general protection exception
+solution: we created a new tss in each pcb and change ss0 and esp0 in that when doing execute and halt, which is wrong. directly change the tss defined in x86_desc insetad solves this problem.
+
+bug 9: page fault occur randomly when we try to open file in terminal
+solution: we add the idt linkage
+
+bug 10: we will have " program terminated abnormally" displayed on shell
+solution: we accidentally retore eax in our system handler. after we delete that, it works.
+
+bug 11: ls won't open
+solution: the return value of open_dir in open syscall is wrong, we comment that out, and it works.
+
+bug 12: after finished getarg, we just can not let cat working
+solution: when we are seperating executives and filename, we check for 0. we should check for ' ' instead
+
+bug 13: when we run fish, we can only see the letter "i" blinking
+solution: we used to pass fd from test.c we pass fd from process pcb right now.
+
+bug 14: we can not type after running shell
+solution: we change the system handler to trap, and then it works.
+
+bug 15: After switch to another terminal, we cannot type in the new terminal
+solution: We forgot to send EOI after function key.
+
+bug 16: After switching to another terminal, the cursor is not at the right place
+solution: We didnt set the passed in X,Y to screen_x and screen_y in the set_cursor function
+
+
+
